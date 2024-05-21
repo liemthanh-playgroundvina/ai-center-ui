@@ -4,7 +4,7 @@ services:
   streamlit-ui:
     image: ai-center:ui-streamlit
     container_name: ai-center-streamlit-ui
-    command: ["streamlit", "run", "Home.py"]
+    command: ["streamlit", "run", "Home.py", "--server.port", "8501", "--server.maxUploadSize", "5"]
     ports:
       - "8002:8501"
     restart: always

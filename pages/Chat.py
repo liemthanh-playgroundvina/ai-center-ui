@@ -29,10 +29,10 @@ for message in st.session_state.chat:
         chat_mess = st.chat_message(message["role"], avatar="🤖")
     with chat_mess:
         if isinstance(message["content"], str):
-            st.markdown(message["content"])
+            st.markdown(rf"""{message["content"]}""")
         elif isinstance(message["content"], list):
             st.image(message["content"][1]['image_url']['url'])
-            st.markdown(message["content"][0]['text'])
+            st.markdown(rf"""{message["content"][0]['text']}""")
         else:
             print(type(message["content"]))
 
@@ -77,7 +77,7 @@ def get_max_tokens_value(model: str):
 def chat_bot(messages: list, chat_model: dict, store_name: str = ""):
     message_placeholder = st.empty()
     full_response = ""
-    message_placeholder.markdown(full_response + "▌")
+    message_placeholder.markdown(rf"""{full_response}""" + "▌")
     chunks = ChatBotService().get_chunks(messages, chat_model, store_name)
     try:
         for chunk in chunks.iter_content(decode_unicode=True, chunk_size=4096):
@@ -89,20 +89,21 @@ def chat_bot(messages: list, chat_model: dict, store_name: str = ""):
                     if not response:
                         continue
                     full_response += response
-                    message_placeholder.markdown(full_response)
+                    message_placeholder.markdown(rf"""{full_response}""")
 
             except requests.exceptions.ChunkedEncodingError:
                 continue
     except requests.exceptions.ChunkedEncodingError:
         pass
 
+    message_placeholder.markdown(rf"""{full_response}""")
     return full_response
 
 
 def chat_vision(messages: list, chat_model: dict):
     message_placeholder = st.empty()
     full_response = ""
-    message_placeholder.markdown(full_response + "▌")
+    message_placeholder.markdown(rf"""{full_response}""" + "▌")
     chunks = ChatVisionService().get_chunks(messages, chat_model)
     try:
         for chunk in chunks.iter_content(decode_unicode=True, chunk_size=4096):
@@ -114,13 +115,14 @@ def chat_vision(messages: list, chat_model: dict):
                     if not response:
                         continue
                     full_response += response
-                    message_placeholder.markdown(full_response)
+                    message_placeholder.markdown(rf"""{full_response}""")
 
             except requests.exceptions.ChunkedEncodingError:
                 continue
     except requests.exceptions.ChunkedEncodingError:
         pass
 
+    message_placeholder.markdown(rf"""{full_response}""")
     return full_response
 
 
@@ -142,6 +144,7 @@ with st.sidebar:
         image_type = st.selectbox("Image Type", ("Upload File", "url"), )
         if image_type == "url":
             st.session_state.img_url = st.text_area(label="Image URL", value=st.session_state.img_url)
+            st.markdown("_:blue-background[Limit 5MB Image]_")
         elif image_type == "Upload File":
             img_uploader = st.file_uploader(label="Upload file", type=["jpg", "png", "tiff"],
                                             key=st.session_state.uploader_key)
@@ -155,7 +158,7 @@ with st.sidebar:
             try:
                 st.image(st.session_state.img_url)
             except:
-                raise ValueError("Undified Image")
+                raise ValueError("Undefined Image")
     # LLMs Param
     host = st.selectbox("Host Model", ("OpenAI", "Fireworks"), on_change=reset_messages)
     model_name = st.selectbox("Model", get_model_name(mode, host), on_change=reset_messages)
@@ -177,13 +180,13 @@ if prompt := st.chat_input("Text..."):
         st.session_state.chat.append({"role": "user", "content": content})
         with st.chat_message("user", avatar="🧑🏻️"):
             st.image(st.session_state.img_url)
-            st.markdown(prompt)
+            st.markdown(rf"""{prompt}""")
         st.session_state.img_url = None
         st.session_state.uploader_key = str(uuid.uuid4())
     else:
         st.session_state.chat.append({"role": "user", "content": prompt})
         with st.chat_message("user", avatar="🧑🏻️"):
-            st.markdown(prompt)
+            st.markdown(rf"""{prompt}""")
 
     # Display assistant message
     with st.chat_message("assistant", avatar="🤖"):
