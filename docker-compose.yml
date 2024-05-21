@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  streamlit-ui:
+    image: ai-center:ui-streamlit
+    container_name: ai-center-streamlit-ui
+    command: ["streamlit", "run", "Home.py"]
+    ports:
+      - "8002:8501"
+    restart: always
+    volumes:
+      - .:/app
