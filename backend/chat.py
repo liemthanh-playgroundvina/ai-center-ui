@@ -10,7 +10,7 @@ class ChatBotService():
     }
 
     model_url_mapper = {
-        'AIServices': 'https://ai-api-gpu-local.playgroundx.site/v2/ai_center/chat',
+        'AIServices': f'{settings.AI_CENTER_BE_URL}/chat',
     }
 
     def get_chunks(self, messages: list, chat_model: dict, store_name: str = ""):
@@ -53,7 +53,7 @@ class ChatVisionService():
     }
 
     model_url_mapper = {
-        'AIServices': 'https://ai-api-gpu-local.playgroundx.site/v2/ai_center/chat-vision',
+        'AIServices': f'{settings.AI_CENTER_BE_URL}/chat-vision',
     }
 
     def get_chunks(self, messages: list, chat_model: dict):

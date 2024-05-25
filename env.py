@@ -7,5 +7,7 @@ load_dotenv(".env")
 
 class Settings():
     AUTHORIZATION = os.getenv("AUTHORIZATION")
+    AI_CENTER_BE_URL = os.getenv("AI_CENTER_BE_URL")
+
 
 settings = Settings()

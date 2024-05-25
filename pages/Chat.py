@@ -160,13 +160,14 @@ with st.sidebar:
             except:
                 raise ValueError("Undefined Image")
     # LLMs Param
-    host = st.selectbox("Host Model", ("OpenAI", "Fireworks"), on_change=reset_messages)
-    model_name = st.selectbox("Model", get_model_name(mode, host), on_change=reset_messages)
-    temperature = st.slider("Temperature", min_value=0.0, max_value=1.0, value=0.7, step=0.05)
-    max_tokens = st.slider("Max_tokens", min_value=256, max_value=get_max_tokens_value(model_name), value=4096, step=2)
-    max_messages = st.slider("Max Messages History Chat", min_value=4, max_value=100, value=40, step=2)
-    st.session_state.chat = st.session_state.chat[-max_messages:]
-    st.button('Clear History Chat', on_click=reset_messages)
+    with st.expander("Configure"):
+        host = st.selectbox("Host Model", ("OpenAI", "Fireworks"), on_change=reset_messages)
+        model_name = st.selectbox("Model", get_model_name(mode, host), on_change=reset_messages)
+        temperature = st.slider("Temperature", min_value=0.0, max_value=1.0, value=0.7, step=0.05)
+        max_tokens = st.slider("Max_tokens", min_value=256, max_value=get_max_tokens_value(model_name), value=4096, step=2)
+        max_messages = st.slider("Max Messages History Chat", min_value=4, max_value=100, value=40, step=2)
+        st.session_state.chat = st.session_state.chat[-max_messages:]
+        st.button('Clear History Chat', on_click=reset_messages)
 
 
 # Chat
