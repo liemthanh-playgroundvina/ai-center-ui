@@ -167,7 +167,7 @@ with st.sidebar:
         max_tokens = st.slider("Max_tokens", min_value=256, max_value=get_max_tokens_value(model_name), value=4096, step=2)
         max_messages = st.slider("Max Messages History Chat", min_value=4, max_value=100, value=40, step=2)
         st.session_state.chat = st.session_state.chat[-max_messages:]
-        st.button('Clear History Chat', on_click=reset_messages)
+    st.button('Clear History Chat', on_click=reset_messages)
 
 
 # Chat
