@@ -74,9 +74,9 @@ with st.sidebar:
         elif image_type == "Upload File":
             img_uploader = st.file_uploader(label="Upload file", type=["jpg", "png", "tiff", "heif", "heic"],
                                             key=st.session_state.gen_uploader_key)
-
             if img_uploader:
-                image = Image.open(img_uploader)
+                img_uploader_show = deepcopy(img_uploader)
+                image = Image.open(img_uploader_show)
                 st.image(image, caption="Uploaded Image", use_column_width=True)
     else:
         style = st.selectbox("Style", ("Photo", "Cartoon", "3D", "Digital Art", "Random", "Other"))
