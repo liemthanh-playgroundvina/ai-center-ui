@@ -66,15 +66,18 @@ with st.sidebar:
         if image_type == "url":
             st.session_state.gen_img_url = st.text_area(label="Image URL", value=st.session_state.gen_img_url).strip()
             st.markdown("_:blue-background[Limit 5MB Image]_")
+            if st.session_state.gen_img_url:
+                try:
+                    st.image(st.session_state.gen_img_url)
+                except:
+                    raise ValueError("Undefined Image")
         elif image_type == "Upload File":
             img_uploader = st.file_uploader(label="Upload file", type=["jpg", "png", "tiff", "heif", "heic"],
                                             key=st.session_state.gen_uploader_key)
 
-        if st.session_state.gen_img_url:
-            try:
-                st.image(st.session_state.gen_img_url)
-            except:
-                raise ValueError("Undefined Image")
+            if img_uploader:
+                image = Image.open(img_uploader)
+                st.image(image, caption="Uploaded Image", use_column_width=True)
     else:
         style = st.selectbox("Style", ("Photo", "Cartoon", "3D", "Digital Art", "Random", "Other"))
         if style == "Other":
