@@ -46,12 +46,8 @@ def get_model_name(pa_mode: str, pa_host: str):
     dict_model = {
         "OpenAI Text-To-Image": ("dall-e-3", "dall-e-2"),
         "OpenAI Image-To-Image": (""),
-        "Fireworks Text-To-Image": (
-        "stable-diffusion-xl-1024-v1-0", "playground-v2-1024px-aesthetic", "playground-v2-5-1024px-aesthetic",
-        "SSD-1B", "japanese-stable-diffusion-xl"),
-        "Fireworks Image-To-Image": (
-        "stable-diffusion-xl-1024-v1-0", "playground-v2-1024px-aesthetic", "playground-v2-5-1024px-aesthetic",
-        "SSD-1B", "japanese-stable-diffusion-xl"),
+        "Fireworks Text-To-Image": ("playground-v2-5-1024px-aesthetic", "stable-diffusion-xl-1024-v1-0", "playground-v2-1024px-aesthetic", "SSD-1B", "japanese-stable-diffusion-xl"),
+        "Fireworks Image-To-Image": ("playground-v2-5-1024px-aesthetic", "stable-diffusion-xl-1024-v1-0", "playground-v2-1024px-aesthetic", "SSD-1B", "japanese-stable-diffusion-xl"),
     }
     return dict_model[key_name]
 
