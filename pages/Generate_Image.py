@@ -150,7 +150,7 @@ with st.sidebar:
                 img_format = img.format.lower()
                 img_base64 = base64.b64encode(img_bytes).decode("utf-8")
                 img_base64 = f"data:image/{img_format};base64,{img_base64}"
-                image_original = f'<img src="{img_base64}" alt="Uploaded Image" width="500"/>'
+                image_original = f'<img src="{img_base64}" alt="Uploaded Image" width="200"/>'
 
             else:
                 image_original = f"[Here]({st.session_state.gen_img_url})"
