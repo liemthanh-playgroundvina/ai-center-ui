@@ -24,6 +24,7 @@ if "table_gen_img" not in st.session_state:
         "Prompt": [],
         "Style": [],
         "Model": [],
+        "Image Original": [],
         "Image Generated": []
     })
 
@@ -136,12 +137,24 @@ with st.sidebar:
     submit = st.button("Generate")
     if submit:
         if mode == "Text-To-Image":
-            # Generate Prompt
+            image_original = ""
             style, sub_prompt, negative_prompt = GenerateImageService().gen_prompt_following_style(style)
             data_response = GenerateImageService().text_to_image(host, model_name, prompt+sub_prompt, negative_prompt, config)
+
         elif mode == "Image-To-Image":
             style = ""
-            data_response = GenerateImageService().image_to_image(st.session_state.gen_img_url, host, model_name, prompt, "", config, img_uploader)
+            img_uploader_to_pred = deepcopy(img_uploader)
+            if img_uploader is not None:
+                img_bytes = img_uploader.read()
+                img = Image.open(BytesIO(img_bytes))
+                img_format = img.format.lower()
+                img_base64 = base64.b64encode(img_bytes).decode("utf-8")
+                img_base64= f"data:image/{img_format};base64,{img_base64}"
+                image_original = f"[Here]({img_base64})"
+            else:
+                image_original = f"[Here]({st.session_state.gen_img_url})"
+
+            data_response = GenerateImageService().image_to_image(st.session_state.gen_img_url, host, model_name, prompt, "", config, img_uploader_to_pred)
 
             st.session_state.gen_img_url = ""
             st.session_state.gen_uploader_key = str(uuid.uuid4())
@@ -154,7 +167,8 @@ with st.sidebar:
             "Prompt": [prompt],
             "Style": [style],
             "Model": [model_name],
-            "Image Generated": [image_generate]
+            "Image Original": [image_original],
+            "Image Generated": [image_generate],
         }
         new_row = pd.DataFrame(new_row)
         df = pd.concat([new_row, st.session_state.table_gen_img], ignore_index=True)
