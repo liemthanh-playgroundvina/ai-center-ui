@@ -55,6 +55,21 @@ def get_model_name(pa_mode: str, pa_host: str):
     return dict_model[key_name]
 
 
+def get_store_name(tag_name: str):
+    tags = {
+        "Writing": ["Write For Me", "Humanizer Pro", "CV Writer", "Automated Writer", "Quality Raters SEO Guide",
+                    "Cover Letter"],
+        "Productive": ["Canva", "Diagrams: Show Me", "AI PDF", "Excel GPT",
+                       "Presentation and Slides GPT: PowerPoints, PDFs", "Resume", "Video Maker", "Whimsical Diagrams"],
+        "Research & Analysis": ["Consensus", "SciSpace", "ScholarAI", "Wolfram", "MarketingAI"],
+        "Education": ["Math Mentor", "Universal Primer", "Tutor Me", "Physics", "Machine Learning", "Data Analytics",
+                      "Economics Econ"],
+        "Lifestyle": ["Astrology Birth Chart GPT", "Travel Guide", "Fitness, Workout & Diet - PhD Coach", "Rizz GPT",
+                      "Song Maker", "DeepGame", "Books", "AutoExpert", "Personal Color Analysis"]
+    }
+    return tags[tag_name]
+
+
 def get_max_tokens_value(model: str):
     dict_token = {
         # OpenAI (Output limit is 4096 token)
@@ -134,11 +149,8 @@ with st.sidebar:
     if mode == "Chat":
         system_prompt = st.text_area(label="System Prompt", value="You are an assistant.")
     elif mode == "GPTs":
-        store_name = st.selectbox("Store Name", ("Write For Me", "Humanizer Pro", "Canva", "Diagrams: Show Me", "Quality Raters SEO Guide", "AI PDF",
-    "Video Script Generator", "Whimsical Diagrams", "ScholarAI", "ResearchGPT",
-    "Assistente AI per CEO marketing oriented", "Math Mentor", "Universal Primer",
-    "The Greatest Computer Science Tutor", "Astrology Fortune Teller", "The Rizz Game", "DeepGame", "Books",)
-                                  , on_change=reset_messages)
+        tag_name  = st.selectbox("Store Name", ("Writing", "Productive", "Research & Analysis", "Education", "Lifestyle"), on_change=reset_messages)
+        store_name = st.selectbox("Store Name", get_store_name(tag_name), on_change=reset_messages)
     elif mode == "Chat-Vision":
         system_prompt = st.text_area(label="System Prompt", value="You are an assistant.")
         image_type = st.selectbox("Image Type", ("Upload File", "url"), )
