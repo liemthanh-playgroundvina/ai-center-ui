@@ -138,8 +138,8 @@ with st.sidebar:
     if submit:
         if mode == "Text-To-Image":
             image_original = ""
-            style, sub_prompt, negative_prompt = GenerateImageService().gen_prompt_following_style(style)
-            data_response = GenerateImageService().text_to_image(host, model_name, prompt+sub_prompt, negative_prompt, config)
+            style, positive_prompt, negative_prompt = GenerateImageService().gen_prompt_following_style(prompt, style)
+            data_response = GenerateImageService().text_to_image(host, model_name, positive_prompt, negative_prompt, config)
 
         elif mode == "Image-To-Image":
             style = ""
@@ -165,7 +165,7 @@ with st.sidebar:
         new_row = {
             "Time": [datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')).strftime('%H:%M:%S')],
             "Mode": [mode],
-            "Prompt": [prompt],
+            "Prompt": [positive_prompt],
             "Style": [style],
             "Model": [model_name],
             "Image Original": [image_original],

@@ -13,12 +13,13 @@ class GenerateImageService():
         'AIServices': f'{settings.AI_CENTER_BE_URL}',
     }
 
-    def gen_prompt_following_style(self, style: str):
+    def gen_prompt_following_style(self, prompt: str, style: str):
         url = self.model_url_mapper['AIServices'] + "/text-to-image/gen-prompt"
         headers = self.headers
         headers["Content-Type"] = "application/json"
 
         body = {
+            "query": prompt,
             "style": style
         }
         # Request
