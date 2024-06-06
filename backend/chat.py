@@ -1,5 +1,8 @@
 import requests
+import sseclient
 from env import settings
+from bs4 import BeautifulSoup
+
 
 
 class ChatBotService():
@@ -13,7 +16,7 @@ class ChatBotService():
         'AIServices': f'{settings.AI_CENTER_BE_URL}/chat',
     }
 
-    def get_chunks(self, messages: list, chat_model: dict, store_name: str = ""):
+    def get_client(self, messages: list, chat_model: dict, store_name: str = ""):
         url = self.model_url_mapper['AIServices']
         headers = self.headers
         body = {
@@ -28,21 +31,27 @@ class ChatBotService():
             response = session.post(url=url,
                                     headers=headers,
                                     json=body,
-                                    stream=True)
+                                    stream=True,
+                                    timeout=30)
             if response.status_code != 200:
                 raise Exception(response.content)
 
-            return response
+            client = sseclient.SSEClient(response)
+
+            return client
         except:
             session = requests.Session()
             response = session.post(url=url,
                                     headers=headers,
                                     json=body,
-                                    stream=True)
+                                    stream=True,
+                                    timeout=30)
             if response.status_code != 200:
                 raise Exception(response.content)
 
-            return response
+            client = sseclient.SSEClient(response)
+
+            return client
 
 
 class ChatVisionService():
@@ -56,7 +65,7 @@ class ChatVisionService():
         'AIServices': f'{settings.AI_CENTER_BE_URL}/chat-vision',
     }
 
-    def get_chunks(self, messages: list, chat_model: dict):
+    def get_client(self, messages: list, chat_model: dict):
         url = self.model_url_mapper['AIServices']
         headers = self.headers
         body = {
@@ -69,47 +78,33 @@ class ChatVisionService():
             response = session.post(url=url,
                                     headers=headers,
                                     json=body,
-                                    stream=True)
+                                    stream=True,
+                                    timeout=15)
             if response.status_code != 200:
                 raise Exception(response.content)
 
-            return response
+            client = sseclient.SSEClient(response)
+
+            return client
         except:
             session = requests.Session()
             response = session.post(url=url,
                                     headers=headers,
                                     json=body,
-                                    stream=True)
+                                    stream=True,
+                                    timeout=15)
             if response.status_code != 200:
                 raise Exception(response.content)
 
-            return response
+            client = sseclient.SSEClient(response)
 
+            return client
 
-def parse_message(input_text):
-    lines = input_text.split('\n')
-    message_dict = {}
-    line_break = False
-    key_break = None
-    for line in lines:
-        key_value = line.split(': ')
-        if key_value.__len__() == 2:
-            key, value = key_value
-        else:
-            key = key_value[0]
-            value = "\n"
-        value = value.replace("\r", "")
-        if key in message_dict:
-            message_dict[key] += value
-            line_break = True
-            key_break = key
-        else:
-            message_dict[key] = value
-    if line_break:
-        message_dict[key_break] += "\n"
-    if "data" in message_dict:
-        return (message_dict["data"].
-                replace("[DATA_STREAMING]", "").
-                replace("[DONE]", "").
-                replace("[METADATA]", "").
-                replace("<!<newline>!>", "\n")) if message_dict["data"] else ""
+def get_title(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an HTTPError for bad responses
+        soup = BeautifulSoup(response.text, 'html.parser')
+        return soup.title.string if soup.title else 'No title found'
+    except requests.exceptions.RequestException as e:
+        return url
